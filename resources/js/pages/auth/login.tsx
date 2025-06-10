@@ -94,11 +94,21 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         Log in
                     </Button>
+                    <Button
+                        type="button"
+                        className="mt-2 w-full"
+                        tabIndex={6}
+                        onClick={() => {
+                            window.location.href = route('google.redirect');
+                        }}
+                    >
+                        Sign in with Google
+                    </Button>
                 </div>
 
                 <div className="text-center text-sm text-muted-foreground">
                     Don't have an account?{' '}
-                    <TextLink href={route('register')} tabIndex={5}>
+                    <TextLink href={route('register')} tabIndex={7}>
                         Sign up
                     </TextLink>
                 </div>

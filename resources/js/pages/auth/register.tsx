@@ -105,11 +105,21 @@ export default function Register() {
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         Create account
                     </Button>
+                    <Button
+                        type="button"
+                        className="mt-2 w-full"
+                        tabIndex={6}
+                        onClick={() => {
+                            window.location.href = route('google.redirect');
+                        }}
+                    >
+                        Sign in with Google
+                    </Button>
                 </div>
 
                 <div className="text-center text-sm text-muted-foreground">
                     Already have an account?{' '}
-                    <TextLink href={route('login')} tabIndex={6}>
+                    <TextLink href={route('login')} tabIndex={7}>
                         Log in
                     </TextLink>
                 </div>
