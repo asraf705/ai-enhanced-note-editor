@@ -26,13 +26,14 @@ class GoogleAuthController extends Controller
             return redirect('/')->withErrors(['Google authentication failed.']);
         }
         // Check if the user already exists
-        $existingUser = User::where('google_id', $googleUser->getId())->first();
+        $existingUser = User::where('email', $googleUser->getEmail())
+        ->where('google_id', $googleUser->getId())
+        ->first();
         if ($existingUser) {
             Auth::login($existingUser);
             Log::info('User logged in: ' . $existingUser->email);
             return redirect()->route('dashboard');
         } else {
-            // Create a new user
             $user = User::updateOrCreate(
                 ['email' => $googleUser->getEmail()],
                 [
@@ -46,5 +47,44 @@ class GoogleAuthController extends Controller
             return redirect()->route('dashboard');
         }
     }
+
+    public function googleLogin()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+    public function googleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
+        } catch (InvalidStateException $e) {
+            Log::error('Google callback failed: ' . $e->getMessage());
+            return redirect('/')->withErrors(['Google authentication failed.']);
+        }
+
+        // Check if the user already exists
+        $existingUser = User::where('email', $googleUser->getEmail())
+        ->where('google_id', $googleUser->getId())
+        ->first();
+        if ($existingUser) {
+            Auth::login($existingUser);
+            Log::info('User logged in: ' . $existingUser->email);
+            return redirect()->route('dashboard');
+        } else {
+            $user = User::updateOrCreate(
+                ['email' => $googleUser->getEmail()],
+                [
+                    'name' => $googleUser->getName(),
+                    'google_id' => $googleUser->getId(),
+                    'avatar' => $googleUser->getAvatar(),
+                ]
+            );
+            Auth::login($user);
+            Log::info('User registered and logged in: ' . $user->email);
+            return redirect()->route('dashboard');
+        }
+    }
+
+    
+    
 
 }
