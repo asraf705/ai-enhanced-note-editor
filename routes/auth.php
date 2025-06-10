@@ -35,12 +35,8 @@ Route::middleware('guest')->group(function () {
         ->name('password.store');
 
     Route::get('/redirect', [GoogleAuthController::class, 'redirect'])->name('google.redirect');
-    Route::get('/callback', [GoogleAuthController::class, 'callback'])->name('callback');
+    Route::get('/auth/callback', [GoogleAuthController::class, 'callback'])->name('callback');
 
-    // Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])
-    //     ->name('google.redirect');
-
-    // Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
 });
 
 Route::middleware('auth')->group(function () {
